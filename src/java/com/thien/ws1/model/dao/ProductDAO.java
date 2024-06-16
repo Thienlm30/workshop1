@@ -5,29 +5,141 @@
  */
 package com.thien.ws1.model.dao;
 
+import com.thien.ws1.model.dto.Account;
+import com.thien.ws1.model.dto.Category;
+import com.thien.ws1.model.dto.Product;
 import com.thien.ws1.utilities.ConnectDB;
 import java.sql.Connection;
-import javax.servlet.ServletConfig;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletContext;
 
 /**
  *
  * @author Thienlm30
  */
-public class ProductDAO {
-    
+public class ProductDAO implements Accessible<Product> {
+
     Connection connection = null;
-    
+
     public ProductDAO() {
-       ConnectDB connectDB = new ConnectDB();
-       this.connection = connectDB.getConnection();
+        ConnectDB connectDB = new ConnectDB();
+        this.connection = connectDB.getConnection();
     }
-    
+
     public ProductDAO(ServletContext sc) {
         ConnectDB connectDB = new ConnectDB(sc);
-        this.connection = connectDB.getConnection();        
+        this.connection = connectDB.getConnection();
     }
-    
-    
-    
+
+    @Override
+    public int insertRec(Product obj) {
+        return 0;
+    }
+
+    @Override
+    public int updateRec(Product obj) {
+        return 0;
+    }
+
+    @Override
+    public int deleteRec(Product obj) {
+        return 0;
+    }
+
+    @Override
+    public Product getObjectById(String id) {
+        Product p = null;
+        try {
+            if (connection != null) {
+                String sql = "SELECT [productId], [productName], [productImage],\n"
+                        + "[brief], [postedDate], [typeId], [account], [unit],\n"
+                        + "[price], [discount]\n"
+                        + "FROM [dbo].[products] WHERE productId = ?";
+                PreparedStatement pst = connection.prepareStatement(sql);
+                pst.setString(1, id);
+                ResultSet rs = pst.executeQuery();
+                if (rs != null && rs.next()) {
+                    String name = rs.getString("productName");
+                    String img = rs.getString("productImage");
+                    String brief = rs.getString("brief");
+                    Date postedDate = (Date) rs.getDate("postedDate");
+                    int typeId = rs.getInt("typeId");
+                    CategoryDAO cd = new CategoryDAO();
+                    Category c = cd.getObjectById(String.valueOf(typeId));
+                    String acc = rs.getString("account");
+                    AccountDAO ad = new AccountDAO();
+                    Account account = ad.getObjectById(acc);
+                    String unit = rs.getString("unit");
+                    int price = rs.getInt("price");
+                    int discount = rs.getInt("discount");
+                    p = new Product(id, name, img, brief, postedDate, c, account, unit, price, discount);
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return p;
+    }
+
+    @Override
+    public Map<String, Product> listAll() {
+        Map<String, Product> map = new HashMap<>();
+        try {
+            if (connection != null) {
+                String sql = "SELECT [productId], [productName], [productImage],\n"
+                        + "[brief], [postedDate], [typeId], [account], [unit],\n"
+                        + "[price], [discount]\n"
+                        + "FROM [dbo].[products]";
+                Statement st = connection.createStatement();
+                ResultSet rs = st.executeQuery(sql);
+                if (rs != null) {
+                    while (rs.next()) {
+                        String id = rs.getString("productId");
+                        String name = rs.getString("productName");
+                        String img = rs.getString("productImage");
+                        String brief = rs.getString("brief");
+                        Date postedDate = (Date) rs.getDate("postedDate");
+                        int typeId = rs.getInt("typeId");
+                        CategoryDAO cd = new CategoryDAO();
+                        Category c = cd.getObjectById(String.valueOf(typeId));
+                        String acc = rs.getString("account");
+                        AccountDAO ad = new AccountDAO();
+                        Account account = ad.getObjectById(acc);
+                        String unit = rs.getString("unit");
+                        int price = rs.getInt("price");
+                        int discount = rs.getInt("discount");
+                        Product p = new Product(id, name, img, brief, postedDate, c, account, unit, price, discount);
+                        map.put(id, p);
+                    }
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
+    }
+
 }

@@ -5,7 +5,7 @@
  */
 package com.thien.ws1.model.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  *

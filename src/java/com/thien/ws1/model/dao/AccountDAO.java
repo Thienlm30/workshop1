@@ -9,6 +9,7 @@ import com.thien.ws1.model.dto.Account;
 import com.thien.ws1.utilities.ConnectDB;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -16,38 +17,92 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 /**
- * 
+ *
  * @author Thienlm30
  */
-public class AccountDAO implements Accessible<Account>{
-    
-    
+public class AccountDAO implements Accessible<Account> {
+
     private Connection connection = null;
 
     public AccountDAO() {
         ConnectDB connectDB = new ConnectDB();
-        connection = connectDB.getConnection();
+        this.connection = connectDB.getConnection();
     }
 
     public AccountDAO(ServletContext sc) {
         ConnectDB connectDB = new ConnectDB(sc);
-        connection = connectDB.getConnection();
+        this.connection = connectDB.getConnection();
     }
-    
-    public Map<String, Account> getAccount() {
-        Map<String, Account> map = new HashMap<>();
-        //connection = null;
+
+    @Override
+    public int insertRec(Account obj) {
+
+        return 0;
+    }
+
+    @Override
+    public int updateRec(Account obj) {
+
+        return 0;
+    }
+
+    @Override
+    public int deleteRec(Account obj) {
+
+        return 0;
+    }
+
+    @Override
+    public Account getObjectById(String id) {
+        Account acc = null;
         try {
-            
-//            connection = connectDB.getConnection();
+            if (connection != null) {
+                String sql = "SELECT [account], [pass], [lastName], [firstName],\n"
+                        + "[birthday], [gender], [phone], [isUse], [roleInSystem]\n"
+                        + "FROM [dbo].[accounts]\n"
+                        + "WHERE [account] = ?";
+                PreparedStatement pst = connection.prepareStatement(sql);
+                pst.setString(1, id);
+                ResultSet rs = pst.executeQuery();
+                if (rs != null && rs.next()) {
+                    String pass = rs.getString("pass");
+                    String lastName = rs.getString("lastName");
+                    String firstName = rs.getString("firstName");
+                    Date birthday = rs.getDate("birthday");
+                    boolean gender = rs.getBoolean("gender");
+                    String phone = rs.getString("phone");
+                    boolean isUse = rs.getBoolean("isUse");
+                    int roleInSystem = rs.getInt("roleInSystem");
+                    acc = new Account(account, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem);
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return acc;
+    }
+
+    @Override
+    public Map<String, Account> listAll() {
+        Map<String, Account> map = new HashMap<>();
+        try {
             if (connection != null) {
                 String sql = "select account, pass, lastName, firstName, \n"
-                    + "birthday, gender, phone, isUse, roleInSystem \n"
-                    + "from accounts";
+                        + "birthday, gender, phone, isUse, roleInSystem \n"
+                        + "from accounts";
                 Statement st = connection.createStatement();
                 ResultSet rs = st.executeQuery(sql);
                 if (rs != null) {
-                    while(rs.next()) {
+                    while (rs.next()) {
                         String account = rs.getString("account");
                         String pass = rs.getString("pass");
                         String lastName = rs.getString("lastName");
@@ -62,42 +117,19 @@ public class AccountDAO implements Accessible<Account>{
                     }
                 }
             }
+            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return map;
     }
 
-    @Override
-    public int insertRec(Account obj) {
-        
-        return 0;
-    }
-
-    @Override
-    public int updateRec(Account obj) {
-        
-        return 0;
-    }
-
-    @Override
-    public int deleteRec(Account obj) {
-        
-        return 0;
-    }
-
-    @Override
-    public Account getObjectById(String id) {
-        
-        return null;
-    }
-
-    @Override
-    public Map<?, Account> listAll() {
-        
-        return null;
-    }
-
-    
-    
 }
