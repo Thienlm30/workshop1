@@ -13,8 +13,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 
@@ -96,8 +98,8 @@ public class ProductDAO implements Accessible<Product> {
     }
 
     @Override
-    public Map<String, Product> listAll() {
-        Map<String, Product> map = new HashMap<>();
+    public List<Product> listAll() {
+        List<Product> map = new ArrayList<>();
         try {
             if (connection != null) {
                 String sql = "SELECT [productId], [productName], [productImage],\n"
@@ -123,7 +125,7 @@ public class ProductDAO implements Accessible<Product> {
                         int price = rs.getInt("price");
                         int discount = rs.getInt("discount");
                         Product p = new Product(id, name, img, brief, postedDate, c, account, unit, price, discount);
-                        map.put(id, p);
+                        map.add(p);
                     }
                 }
             }

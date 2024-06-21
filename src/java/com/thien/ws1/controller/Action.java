@@ -13,5 +13,9 @@ public interface Action {
     public final String LOGIN = "login";
     public final String WELCOME = "welcome";
     public final String LOGOUT = "logout";
-    public final String CART = "cart";
+    public final String VIEW_ACCOUNT = "account";
+    public final String VIEW_CATEGORY = "category";
+    public final String VIEW_PRODUCT = "product";
+    public final String UPDATE = "update";
+    public final String DELETE = "delete";
 }

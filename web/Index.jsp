@@ -5,15 +5,20 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Workshop1</title>
     </head>
     <body>
         <div>
-            <p>Dash board</p>
+            <%@include file="Header.jsp" %>
         </div>
+        <div>
+            <p>Welcome to Workshop 1</p>
+        </div>
+        
     </body>
 </html>

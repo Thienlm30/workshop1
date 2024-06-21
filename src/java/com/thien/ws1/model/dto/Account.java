@@ -20,7 +20,10 @@ public class Account {
     private boolean gender;
     private String phone;
     private boolean isUse;
-    private int roleInSystem;
+    private int roleInSystem; // 1: admin, 2: manager, 3: saler
+    // giá trị càng bé role càng cao?
+    // chỉ có admin được tạo tài khoản mới
+    // role cao hơn thì edit được account role thấp hơn
 
     public Account() {
         this.birthday = new Date();

@@ -11,9 +11,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletContext;
 
 /**
@@ -36,7 +37,7 @@ public class AccountDAO implements Accessible<Account> {
 
     @Override
     public int insertRec(Account obj) {
-
+        
         return 0;
     }
 
@@ -73,18 +74,18 @@ public class AccountDAO implements Accessible<Account> {
                     String phone = rs.getString("phone");
                     boolean isUse = rs.getBoolean("isUse");
                     int roleInSystem = rs.getInt("roleInSystem");
-                    acc = new Account(account, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem);
+                    acc = new Account(id, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem);
                 }
             }
             connection.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
                 if (connection != null) {
                     connection.close();
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -92,8 +93,8 @@ public class AccountDAO implements Accessible<Account> {
     }
 
     @Override
-    public Map<String, Account> listAll() {
-        Map<String, Account> map = new HashMap<>();
+    public List<Account> listAll() {
+        List<Account> list = new ArrayList<>();
         try {
             if (connection != null) {
                 String sql = "select account, pass, lastName, firstName, \n"
@@ -113,23 +114,22 @@ public class AccountDAO implements Accessible<Account> {
                         boolean isUse = rs.getBoolean("isUse");
                         int roleInSystem = rs.getInt("roleInSystem");
                         Account acc = new Account(account, pass, lastName, firstName, birthday, gender, phone, isUse, roleInSystem);
-                        map.put(account, acc);
+                        list.add(acc);
                     }
                 }
             }
-            connection.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
                 if (connection != null) {
                     connection.close();
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return map;
+        return list;
     }
 
 }

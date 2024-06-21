@@ -11,7 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 
@@ -34,17 +36,17 @@ public class CategoryDAO implements Accessible<Category> {
 
     @Override
     public int insertRec(Category obj) {
-        
+        return 0;
     }
 
     @Override
     public int updateRec(Category obj) {
-        
+        return 0;
     }
 
     @Override
     public int deleteRec(Category obj) {
-        
+        return 0;
     }
 
     @Override
@@ -80,8 +82,8 @@ public class CategoryDAO implements Accessible<Category> {
     }
 
     @Override
-    public Map<Integer, Category> listAll() {
-        Map<Integer, Category> map = new HashMap<>();
+    public List<Category> listAll() {
+        List<Category> map = new ArrayList<>();
         try {
             if (connection != null) {
                 String sql = "SELECT [typeId], [categoryName], [memo]\n"
@@ -94,7 +96,7 @@ public class CategoryDAO implements Accessible<Category> {
                         String name = rs.getString("categoryName");
                         String memo = rs.getString("memo");
                         Category c = new Category(id, name, memo);
-                        map.put(id, c);
+                        map.add(c);
                     }
                 }
             }

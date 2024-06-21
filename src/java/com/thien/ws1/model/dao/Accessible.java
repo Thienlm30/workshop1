@@ -5,7 +5,7 @@
  */
 package com.thien.ws1.model.dao;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -17,5 +17,5 @@ public interface Accessible<T> {
     int updateRec(T obj);
     int deleteRec(T obj);
     T getObjectById(String id);
-    Map<?, T> listAll();
+    List<T> listAll();
 }
